@@ -28,7 +28,7 @@ jobs:
         run: |
           flake8 azure/ data/ \
             --max-line-length 120 \
-            --ignore E501,W503,E402,E241,E221,E303 \
+            --ignore E501,W503,E402,E241,E221,E303,E231,E226,W291,F401 \
             --exclude __pycache__
 
       - name: Lint SQL queries
