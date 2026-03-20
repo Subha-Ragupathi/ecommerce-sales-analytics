@@ -42,4 +42,4 @@ cd azure && python data_pipeline.py # runs locally in sim mode without Azure cre
 
 ---
 
-Still planning to add the actual Power BI file once I finish building it out.
+The Power BI dashboard spec is in `dashboard/powerbi_dashboard_spec.md` — covers 5 pages with DAX measures, KPI cards, and slicers.

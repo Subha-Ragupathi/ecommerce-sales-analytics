@@ -5,3 +5,7 @@ __pycache__/
 .DS_Store
 *.egg-info/
 dist/
+
+# Data files (use generate_data.py instead)
+data/raw/*.csv
+data/processed/*.csv
