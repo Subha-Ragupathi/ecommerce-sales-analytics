@@ -1,0 +1,60 @@
+name: CI — Lint & Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install flake8 sqlfluff
+
+      - name: Lint Python files
+        run: |
+          flake8 azure/ data/ \
+            --max-line-length 120 \
+            --ignore E501,W503,E402,E241,E221,E303,E231,E226,W291,F401 \
+            --exclude __pycache__
+
+      - name: Lint SQL queries
+        run: |
+          sqlfluff lint sql/ \
+            --dialect mysql \
+            || true
+
+      - name: Verify required files exist
+        run: |
+          REQUIRED_FILES=(
+            "notebooks/01_EDA_Analysis.ipynb"
+            "sql/01_schema_setup.sql"
+            "sql/02_data_exploration.sql"
+            "sql/03_business_insights.sql"
+            "azure/data_pipeline.py"
+            "README.md"
+          )
+          for f in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "MISSING: $f"
+              exit 1
+            fi
+            if [ ! -s "$f" ]; then
+              echo "EMPTY: $f"
+              exit 1
+            fi
+          done
+          echo "All required files present and non-empty."
